@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account - Summer's Pet Shop</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Styling for the pop-up window */
+    .popup-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 500px;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 30px;
+      z-index: 9999;
+      display: none;
+    }
+    /* Additional styles for form elements (optional) */
+    .popup-container input[type="text"] {
+      width: 405px;
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+
+    .btn-display, .btn-withdraw {
+          margin: 20px 0;
+      }
+
+      .adopted-pets-table {
+          width: 100%;
+          margin: 20px 0;
+      }
+
+      .adopted-pets-table th, .adopted-pets-table td {
+          text-align: center;
+          padding: 10px;
+      }
+
+      .adopted-pets-table th {
+          background-color: #4CAF50;
+          color: white;
+      }
+
+      .adopted-pets-table td {
+          background-color: #f2f2f2;
+      }
+  </style>
+</head>
+<body>
+  <!-- Pop-up container -->
+  <div class="popup-container" id="popupContainer">
+    <h2>Enter The Destination Address</h2>
+    <form>
+      <input type="text" id="addressInput" placeholder="Address">
+      <button class="btn btn-default btn-display" onclick="submitForm()">Submit</button>
+      <button class="btn btn-default btn-display" onclick="cancelPop()">Cancel</button>
+    </form>
+  </div>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-10 col-sm-push-1">
+        <h2 class="text-center">Account Information</h2>
+        <hr/>
+        <button id="displayBtn" class="btn btn-default btn-display" onclick="App.displayAccountData()">Refresh Data</button>
+        <h2><span id="my-adopted-pets"></span></h2>
+        <table id="my-adopted-pets-table" class="adopted-pets-table">
+            <thead>
+                <tr>
+
+                </tr>
+            </thead>
+            <tbody id="pets-tbody">
+                <!-- adopted pets data will be added here -->
+            </tbody>
+        </table>
+        <h2><span id="message"></span></h2>
+        <table id="my-pending-pets-table" class="adopted-pets-table">
+          <thead>
+              <tr>
+
+              </tr>
+          </thead>
+          <tbody id="pets-tbody">
+              <!-- adopted pets data will be added here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  <script>
+
+    function cancelPop() {
+      const popup = document.getElementById('popupContainer');
+      popup.style.display = 'none';
+      $('#displayBtn').trigger('click');
+      
+    }
+
+    function showPopup(petId, account) {
+    const popupContainer = document.getElementById('popupContainer');
+    popupContainer.style.display = 'block';
+    popupContainer.dataset.petid = petId; // Store the petId
+    popupContainer.dataset.account = account;
+    }
+
+    async function submitForm() {
+      // prevent the form from being submitted normally
+      event.preventDefault();
+
+      // get the value from the input field
+      var address = document.getElementById('addressInput').value;
+      if(!App.isAddress(address)) {
+        alert('The provided string is not a valid Ethereum address!');
+        return;
+      }
+      // get the petId and account
+      var popupContainer = document.getElementById('popupContainer');
+      var petId = popupContainer.dataset.petid;
+      var account = popupContainer.dataset.account;
+      // now you can use the address and petId
+      console.log(address, petId,account);
+      const instance = await App.contracts.Adoption.deployed();
+      try {
+        // Call the transferRequest function
+        await instance.transferRequest(petId, address, { from: account });
+
+        // If successful, display a success message
+        alert('Transfer request successful!');
+      } catch (error) {
+        // If there's an error, log it
+        console.error('An error occurred in your transfer:', error);
+      }
+       
+      // clear the form and hide the popup
+      cancelPop();
+  }
+
+
+
+  </script>
+</body>
+</html>

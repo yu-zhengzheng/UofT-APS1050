@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Withdraw Funds - Summer's Pet Shop</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+      .btn-display, .btn-withdraw {
+          margin: 20px 0;
+      }
+
+      #adopted-pets-table {
+          width: 100%;
+          margin: 20px 0;
+      }
+
+      #adopted-pets-table th, #adopted-pets-table td {
+          text-align: center;
+          padding: 10px;
+      }
+
+      #adopted-pets-table th {
+          background-color: #4CAF50;
+          color: white;
+      }
+
+      #adopted-pets-table td {
+          background-color: #f2f2f2;
+      }
+    </style>
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h2 class="text-center">Balance Sheet</h2>
+          <hr/>
+          <button class="btn btn-default btn-display" onclick="App.displayTransactionData()">Refresh Data</button>
+          <h2><span id="total-fee"></span></h2>
+          <h4><span id="hint"></span></h4>
+          <table id="adopted-pets-table" class="table">
+              <thead>
+                  <tr>
+
+                  </tr>
+              </thead>
+              <tbody id="pets-tbody">
+                  <!-- adopted pets data will be added here -->
+              </tbody>
+          </table>
+          <button class="btn btn-default btn-withdraw" onclick="App.handleWithdraw(event)">Withdraw Adoption Fees</button>
+          <button class="btn btn-default btn-withdraw-donation" onclick="App.handleWithdrawDonation(event)">Withdraw Donations</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        $(window).on('load', function() {
+            App.init();
+        });
+    </script>
+  </body>
+</html>
+
+
